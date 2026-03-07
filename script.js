@@ -50,65 +50,68 @@ const cardArray = [
 ]
 
 cardArray.sort(() => 0.5 - Math.random())
+console.log(cardArray)
+const cardChosen = []
+const chosenID = []
+let result = 0
 
 const gridDisplay = document.querySelector('#game-board')
-const scoreDisplay = document.querySelector('#score')
-let cardsChosen = []
-let cardsChosenIds = []
-const cardsWon = []
+const scoreDisplay = document.getElementById('score')
+
+
 
 function createBoard() {
     for (let i = 0; i < cardArray.length; i++) {
         const card = document.createElement('img')
         card.setAttribute('src', 'images/blank.png')
         card.setAttribute('data-id', i)
-        card.addEventListener('click', flipCard)
+        card.addEventListener("click", flipboard)
         gridDisplay.appendChild(card)
     }
 }
 
-function flipCard() {
-    const cardId = this.getAttribute('data-id')
-    if (cardsChosenIds.includes(cardId) || cardsWon.includes(cardId)) {
-        return
-    }
-    cardsChosen.push(cardArray[cardId].name)
-    cardsChosenIds.push(cardId)
-    this.setAttribute('src', cardArray[cardId].img)
-    if (cardsChosen.length === 2) {
-        setTimeout(checkMatch, 500)
-    }
-}
-
-function checkMatch() {
-    const cards = document.querySelectorAll('img')
-    const optionOneId = cardsChosenIds[0]
-    const optionTwoId = cardsChosenIds[1]
-
-    if (optionOneId === optionTwoId) {
-        cards[optionOneId].setAttribute('src', 'images/blank.png')
-        cards[optionTwoId].setAttribute('src', 'images/blank.png')
-        alert('You have clicked the same image!')
-    } else if (cardsChosen[0] === cardsChosen[1]) {
-        alert('You found a match!')
-        cards[optionOneId].setAttribute('src', 'images/white.png')
-        cards[optionTwoId].setAttribute('src', 'images/white.png')
-        cards[optionOneId].removeEventListener('click', flipCard)
-        cards[optionTwoId].removeEventListener('click', flipCard)
-        cardsWon.push(optionOneId, optionTwoId)
-    } else {
-        cards[optionOneId].setAttribute('src', 'images/blank.png')
-        cards[optionTwoId].setAttribute('src', 'images/blank.png')
-        alert('Sorry, try again!')
-    }
-
-    cardsChosen = []
-    cardsChosenIds = []
-    scoreDisplay.textContent = cardsWon.length / 2
-
-    if (cardsWon.length === cardArray.length) {
-        scoreDisplay.textContent = 'Congratulations! You found them all!'
-    }
-}
-
 createBoard()
+
+function checkMatch () {
+
+    const cards = document.querySelectorAll('#game-board img')
+
+    if(cardChosen[0] === cardChosen[1]) {
+
+        console.log("Found a Match")
+        result++
+        scoreDisplay.innerText = result
+        cards[chosenID[0]].setAttribute('src', 'images/white.png')
+        cards[chosenID[1]].setAttribute('src', 'images/white.png')
+
+        // make them unclickable
+        cards[chosenID[0]].removeEventListener('click', flipboard)
+        cards[chosenID[1]].removeEventListener('click', flipboard)
+
+    } else {
+
+        cards[chosenID[0]].setAttribute('src', 'images/blank.png')
+        cards[chosenID[1]].setAttribute('src', 'images/blank.png')
+
+    }
+
+    cardChosen.length = 0
+    chosenID.length = 0
+}
+
+function flipboard(){
+
+    const clickId = this.getAttribute('data-id')
+    console.log("clicked", clickId)
+    cardChosen.push(cardArray[clickId].name)
+    console.log(cardChosen)
+    this.setAttribute('src', cardArray[clickId].img)
+    chosenID.push(clickId)
+    if(cardChosen.length === 2)
+    {
+        setTimeout(checkMatch, 500);
+    }
+
+} 
+
+
