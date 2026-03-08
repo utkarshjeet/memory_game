@@ -97,6 +97,13 @@ function checkMatch () {
 
     cardChosen.length = 0
     chosenID.length = 0
+
+    if(result === 6)
+    {
+        
+    }
+
+
 }
 
 function flipboard(){
